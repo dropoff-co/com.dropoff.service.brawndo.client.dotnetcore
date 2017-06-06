@@ -23,8 +23,9 @@ namespace Dropoff
             this.host = host;
             this.privateKey = privateKey;
             this.publicKey = publicKey;
-            this.client = new HttpClient();
-            this.client.BaseAddress = new Uri(apiUrl);
+            this.client = new HttpClient() {
+                BaseAddress = new Uri(apiUrl)
+            };
         }
 
         private string GetXDropoffDate()

@@ -11,14 +11,14 @@ namespace DropoffApp
         static void Main(string[] args)
         {
             System.Diagnostics.Debug.WriteLine("Hello World!");
-            Dropoff.ApiV1 api = new Dropoff.ApiV1();
-            string url = "http://192.168.1.95:9094/v1";
-            string host = "192.168.1.95:9094";
-            string private_key = "7f8fee62743d7bb5bf2e79a0438516a18f4a4a4df4d0cfffda26a3b906817482";
-            string public_key = "user::91e9b320b0b5d71098d2f6a8919d0b3d5415db4b80d4b553f46580a60119afc8";
+            ApiV1 brawndo = new ApiV1();
+            string url = "https://sandbox-brawndo.dropoff.com/v1";
+            string host = "sandbox-brawndo.dropoff.com";
+            string private_key = "";
+            string public_key = "";
 
-            api.Initialize(url, host, private_key, public_key);
-            JObject info = api.Info();
+            brawndo.Initialize(url, host, private_key, public_key);
+            JObject info = brawndo.Info();
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
@@ -26,7 +26,7 @@ namespace DropoffApp
 
             OrderGetParameters orderGetParams = new OrderGetParameters();
 
-            JObject page = api.order.Get(orderGetParams);
+            JObject page = brawndo.order.Get(orderGetParams);
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
@@ -39,7 +39,7 @@ namespace DropoffApp
                 orderGetParams.last_key = (string) page["last_key"];
             }
 
-            page = api.order.Get(orderGetParams);
+            page = brawndo.order.Get(orderGetParams);
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
@@ -52,7 +52,7 @@ namespace DropoffApp
             string order_id = (string)page["data"][0]["details"]["order_id"];
             orderGetParams = new OrderGetParameters();
             orderGetParams.order_id = order_id;
-            JObject anOrder = api.order.Get(orderGetParams);
+            JObject anOrder = brawndo.order.Get(orderGetParams);
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
@@ -62,7 +62,7 @@ namespace DropoffApp
             estimateParams.origin = "2517 Thornton Road, Austin, TX 78704";
             estimateParams.destination = "800 Brazos Street, Austin, TX 78701";
             estimateParams.utc_offset = DateTime.Now.ToString("zzz");
-            JObject estimate = api.order.Estimate(estimateParams);
+            JObject estimate = brawndo.order.Estimate(estimateParams);
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
@@ -80,7 +80,7 @@ namespace DropoffApp
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             TimeSpan diff = tomorrowTenAM.ToUniversalTime() - origin;
             estimateParams.ready_timestamp = (Int32)Math.Floor(diff.TotalSeconds);
-            estimate = api.order.Estimate(estimateParams);
+            estimate = brawndo.order.Estimate(estimateParams);
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
             System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++++++++++++++");
@@ -127,22 +127,22 @@ namespace DropoffApp
             //orderCreateParams.details.reference_name = "";
             string json = JsonConvert.SerializeObject(orderCreateParams);
             System.Diagnostics.Debug.WriteLine(json);
-            JObject createResponse = api.order.Create(orderCreateParams);
+            JObject createResponse = brawndo.order.Create(orderCreateParams);
             System.Diagnostics.Debug.WriteLine(createResponse);
             string created_order_id = (string)createResponse["data"]["order_id"];
             System.Diagnostics.Debug.WriteLine(createResponse);
             TipParameters tipParameters = new TipParameters();
             tipParameters.order_id = created_order_id;
             tipParameters.amount = 4.44;
-            JObject tipResponse = api.order.tip.Create(tipParameters);
+            JObject tipResponse = brawndo.order.tip.Create(tipParameters);
             System.Diagnostics.Debug.WriteLine(tipResponse);
-            tipResponse = api.order.tip.Get(tipParameters);
+            tipResponse = brawndo.order.tip.Get(tipParameters);
             System.Diagnostics.Debug.WriteLine(tipResponse);
-            tipResponse = api.order.tip.Delete(tipParameters);
+            tipResponse = brawndo.order.tip.Delete(tipParameters);
             System.Diagnostics.Debug.WriteLine(tipResponse);
             OrderCancelParameters cancelParameters = new OrderCancelParameters();
             cancelParameters.order_id = created_order_id;
-            JObject cancelResponse = api.order.Cancel(cancelParameters);
+            JObject cancelResponse = brawndo.order.Cancel(cancelParameters);
             System.Diagnostics.Debug.WriteLine(cancelResponse);
         }
     }
