@@ -54,10 +54,10 @@ Instantiate an instance of ApiV1 in order to start making calls to brawndo.
 
 You will then have to configure the brawndo instance with the configure function.
 
-string api_url = "https://sandbox-brawndo.dropoff.com/v1";
-string host = "sandbox-brawndo.dropoff.com";
-string private_key = "fcb60b8680d7b5c67921a852b39067a19d85318ce8abf4c512";
-string public_key = "ced2eaf24f1eaf832c1ea92b41386b4a5982cfcdb69b7c7818";
+    string api_url = "https://sandbox-brawndo.dropoff.com/v1";
+    string host = "sandbox-brawndo.dropoff.com";
+    string private_key = "fcb60b8680d7b5c67921a852b39067a19d85318ce8abf4c512";
+    string public_key = "ced2eaf24f1eaf832c1ea92b41386b4a5982cfcdb69b7c7818";
 
     brawndo.Initialize(api_url, host, private_key, public_key);
             
