@@ -1,6 +1,6 @@
 
 
-# com.dropoff.service.brawndo.client.dotnetcore
+# Brawndo .Net Client
 
 This is the 3rd party dropoff .NET client for creating and viewing orders.
 
