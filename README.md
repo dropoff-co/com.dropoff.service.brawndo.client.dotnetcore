@@ -1,6 +1,6 @@
+<img src="Dropoff-Logo-Cropped.png" alt="Drawing" style="width: 200px;"/>
 
-
-# Brawndo .Net Client
+# .NET API Client (July 2017)
 
 This is the 3rd party dropoff .NET client for creating and viewing orders.
 
@@ -64,7 +64,7 @@ You will then have to configure the brawndo instance with the configure function
 * **api_url** - the url of the brawndo api.  This field is required.
 * **host** - the api host.  This field is required.
 * **public_key** - the public key of the user that will be using the client.  This field is required.
-* **private_key** - the private key of the user that will be using the client.
+* **private_key** - the private key of the user that will be using the client.  This field is required.
 
 
 ### Getting Your Client Information <a id="client_info"></a>
