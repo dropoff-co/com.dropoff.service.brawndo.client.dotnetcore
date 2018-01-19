@@ -24,15 +24,15 @@ namespace Dropoff
 
     public struct OrderCreateDetails
     {
-        public Int32 quantity;
-        public Int32 weight;
-        public string eta;
-        public string distance;
-        public string price;
-        public Int32 ready_date;
-        public string type;
-        public string reference_name;
-        public string reference_code;
+        public Int32   quantity;
+        public Int32   weight;
+        public string  eta;
+        public string  distance;
+        public string  price;
+        public Int32   ready_date;
+        public string  type;
+        public string  reference_name;
+        public string  reference_code;
     }
 
     public struct OrderCreateParameters
@@ -41,6 +41,7 @@ namespace Dropoff
         public OrderCreateAddress origin;
         public OrderCreateAddress destination;
         public OrderCreateDetails details;
+        public Int32[] properties;
     }
 
     public struct EstimateParameters
@@ -64,6 +65,11 @@ namespace Dropoff
         public string order_id;
         public string company_id;
         public string last_key;
+    }
+
+    public struct AvailablePropertiesParameters
+    {
+        public string company_id;
     }
 
     public class Order
@@ -176,6 +182,19 @@ namespace Dropoff
             string payload = JsonConvert.SerializeObject(parameters, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             JObject result = client.DoPost("/order", "order", payload, query);
             return result;
+        }
+
+        public JObject AvailableProperties(AvailablePropertiesParameters parameters)
+        {
+            Dictionary<string, string> query = new Dictionary<string, string>();
+
+            if (parameters.company_id != null)
+            {
+                query.Add("company_id", parameters.company_id);
+            }
+
+            JObject order = client.DoGet("/order/properties", "order", query);
+            return order;
         }
 
         public JObject Simulate(string market)
