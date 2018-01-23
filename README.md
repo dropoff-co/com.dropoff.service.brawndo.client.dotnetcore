@@ -1,24 +1,26 @@
 <img src="Dropoff-Logo-Cropped.png" alt="Drawing" style="width: 200px;"/>
 
-# .NET API Client (July 2017)
+# .NET API Client
 
 This is the 3rd party dropoff .NET client for creating and viewing orders.
 
-* **For Javascript documentation go [HERE](https://github.com/dropoff-co/com.dropoff.service.brawndo.client/blob/master/README.md "Javascript")**
-* **For PHP documentation go [HERE](https://github.com/dropoff-co/com.dropoff.service.brawndo.client/blob/master/php_README.md "PHP")**
-* **For GO documentation go [HERE](https://github.com/dropoff-co/com.dropoff.service.brawndo.client/blob/master/go_README.md "GO")**
-* **For Ruby documentation go [HERE](https://github.com/dropoff-co/com.dropoff.service.brawndo.client/blob/master/ruby_README.md "Ruby")**
+* **For Javascript documentation go [HERE](https://github.com/dropoff-co/com.dropoff.service.brawndo.client.js "Javascript")**
+* **For PHP documentation go [HERE](https://github.com/dropoff-co/com.dropoff.service.brawndo.client.php "PHP")**
+* **For GO documentation go [HERE](https://github.com/dropoff-co/com.dropoff.service.brawndo.client.go "GO")**
+* **For Ruby documentation go [HERE](https://github.com/dropoff-co/com.dropoff.service.brawndo.client.ruby "Ruby")**
 
 # Table of Contents
   + [Client Info](#client)
     - [Configuration](#configuration)
     - [Getting Your Account Info](#client_info)
     - [Enterprise Managed Clients](#managed_clients)
+    - [Order Properties](#order_properties)
     - [Getting Pricing Estimates](#estimates)
     - [Placing an Order](#placing)
     - [Cancelling an Order](#cancel)
     - [Getting a Specific Order](#specific)
     - [Getting a Page of Order](#page)
+  + [Signature Image URL](#signature)
   + [Tips](#tips)  
     - [Creating](#tip_create)
     - [Deleting](#tip_delete)
@@ -200,6 +202,64 @@ All you have to do is specify the id of the client that you want to act on.  So 
 
 The following api documentation will show how to do this.
 
+### Order Properties <a id="order_properties"></a>
+
+Depending on your client, you may have the option to add properties to your order.  In order to determine whether or not your client has properties, you can make a call the **AvailableProperties** method.  It will return all properties that can be applied to your orders during creation.
+
+    AvailablePropertiesParameters p = new AvailablePropertiesParameters();
+    p.company_id = "asdfasd"; //optional
+    JObject properties = brawndo.order.AvailableProperties(p);
+    return properties;
+	
+If you include a **company_id** you will retrieve that company's properties only if your account credentials are managing that account.
+
+An example of a successful response will look like this:
+
+	{
+  		"data": [
+    	{
+      		"id": 1,
+      		"label": "Leave at Door",
+      		"description": "If recipient is not at home or at office, leave order at the door.",
+      		"price_adjustment": 0,
+      		"conflicts": [
+      		  2
+      		],
+      		"requires": []
+    	},
+    	{
+      		"id": 2,
+      		"label": "Signature Required",
+      		"description": "Signature is required for this order.",
+      		"price_adjustment": 0,
+      		"conflicts": [
+      		  1
+      		],
+      		"requires": []
+    	},
+    	{
+      		"id": 3,
+      		"label": "Legal Filing",
+      		"description": "This order is a legal filing at the court house. Please read order remarks carefully.",
+      		"price_adjustment": 5.50,
+      		"conflicts": [],
+      		"requires": [ 
+      			2 
+      		]
+    	}
+  		],
+  		"count": 3,
+  		"total": 3,
+  		"success": true
+	}	
+
+- **id** - the id of the property, you will use this value if you want to add the property to an order you are creating
+- **label** - a simple description of the property.
+- **description** - more details about the property.
+- **price_adjustment** - a number that describes any additional charges that the property will require.
+- **conflicts** - an array of other property ids that cannot be included in an order when this property is set.  In the above response you cannot set both "Leave at Door" and "Signature Required".
+- **requires** - an array of other property ids that must be included in an order when this property is set.  In the above response, when "Legal Filing" is set on an order, then "Signature Required" should be set as well.
+
 
 ### Getting Pricing Estimates <a id="estimates"></a>
 
@@ -351,6 +411,17 @@ The details contain attributes about the order
 * **type** - the order window.  Can be asap, two_hr, four_hr, after_hr, or holiday depending on the ready_date. Required.
 * **reference_name** - a field for your internal referencing. Optional.
 * **reference_code** - a field for your internal referencing. Optional.
+    
+#### Order properties data.
+
+
+The properties section is an array of [property ids](#order_properties) to add to the order
+
+    orderCreateParams.details.properties = new Int32[] { 2, 3 };
+
+This is an optional piece of data.
+
+
 
 Once this data is created, you can create the order.
 
@@ -468,7 +539,21 @@ Example response
                  lat: 30.263706,
                  market: 'austin',
                  remarks: 'Be nice to napoleon'
-             }
+             },
+             properties : [
+             		{
+      					"id": 2,
+      					"label": "Signature Required",
+      					"description": "Signature is required for this order.",
+			      		"price_adjustment": 0
+    				},
+    				{
+      					"id": 3,
+      					"label": "Legal Filing",
+      					"description": "This order is a legal filing at the court house. Please read order remarks carefully.",
+			      		"price_adjustment": 5.50
+    				}
+             ]
         },
         success: true,
         timestamp: '2015-03-09T18:42:15+00:00'
@@ -524,6 +609,24 @@ Example response
         success: true,
         timestamp: '2015-03-09T18:42:15+00:00'
     }
+
+## Signature Image URL<a id="signature"></a>
+
+Some orders will contain signatures.  If you want to get a url to an image of the signature you can call the **GetSignature** method.  Note that the signature may not always exist, for example when the delivery was left at the door of the destination.
+
+	OrderGetParameters ogp = new OrderGetParameters();
+	ogp.order_id = "Rr0W-e1OL-Lr0";
+	ogp.company_id = ""; //optional
+	JObject order = brawndo.order.GetSignature(ogp);
+
+Response Structure
+
+	type GetSignatureResponse struct {
+		Url				string
+		Success		bool
+	}
+
+**The signature url is configured with an expiration time of 5 minutes after the request for the resource was made**
 
 ## Tips <a id="tips"></a>
 
