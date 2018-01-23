@@ -152,6 +152,29 @@ namespace Dropoff
             return order;
         }
 
+        public JObject GetSignature(OrderGetParameters parameters)
+        {
+            Dictionary<string, string> query = new Dictionary<string, string>();
+
+            if (parameters.company_id != null)
+            {
+                query.Add("company_id", parameters.company_id);
+            }
+
+            string path = "/order/signature";
+
+            if (parameters.order_id != null)
+            {
+                path += "/" + parameters.order_id;
+            } else
+            {
+                throw new ArgumentException("order_id is required");
+            }
+
+            JObject order = client.DoGet(path, "order", query);
+            return order;
+        }
+
         public JObject Cancel(OrderCancelParameters parameters)
         {
             if (parameters.order_id == null)

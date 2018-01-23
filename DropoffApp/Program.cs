@@ -45,6 +45,14 @@ namespace DropoffApp
             return order;
         }
 
+        protected JObject GetOrderSignature(string order_id)
+        {
+            OrderGetParameters ogp = new OrderGetParameters();
+            ogp.order_id = order_id;
+            JObject order = brawndo.order.GetSignature(ogp);
+            return order;
+        }
+
         protected JObject GetOrderPage(string last_key)
         {
             OrderGetParameters ogp = new OrderGetParameters();
@@ -158,6 +166,8 @@ namespace DropoffApp
             System.Diagnostics.Debug.WriteLine("Info: " + i1.ToString());
             JObject props = p.AvailableProperties();
             System.Diagnostics.Debug.WriteLine("Properties: " + props.ToString());
+            JObject signature = p.GetOrderSignature("gV1z-NVVE-O8w");
+            System.Diagnostics.Debug.WriteLine("Signature: " + signature.ToString());
 
             JObject e1 = p.GetEstimate(
                 "2517 Thornton Road, Austin, TX 78704", 
