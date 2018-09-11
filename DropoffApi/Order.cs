@@ -44,6 +44,13 @@ namespace Dropoff
         public Int32[] properties;
     }
 
+    public struct SimulateParameters
+    {
+        public string company_id;
+        public string market;
+        public string order_id;
+    }
+
     public struct EstimateParameters
     {
         public string origin;
@@ -220,15 +227,32 @@ namespace Dropoff
             return order;
         }
 
-        public JObject Simulate(string market)
+        public JObject Simulate(SimulateParameters parameters)
         {
-            if (market == null)
+            if (parameters.market == null && parameters.order_id == null)
             {
-                throw new ArgumentException("market should not be null");
+                throw new ArgumentException("market or order_id should not be null");
             }
 
-            JObject order = client.DoGet("/order/simulate/" + market, "order", null);
-            return order;
+            string url = null;
+            
+            Dictionary<string, string> query = new Dictionary<string, string>();
+
+            if (parameters.company_id != null)
+            {
+                query.Add("company_id", parameters.company_id);
+            }
+
+            if (parameters.market != null)
+            {
+                url = "/order/simulate/" + parameters.market;
+            } else if (parameters.order_id != null)
+            {
+                url = "/order/simulate/order/" + parameters.order_id;
+            }
+            
+            JObject simulationResponse = client.DoGet(url, "order", query);
+            return simulationResponse;
         }
     }
 }

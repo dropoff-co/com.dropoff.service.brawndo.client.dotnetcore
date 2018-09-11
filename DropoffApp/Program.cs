@@ -156,62 +156,62 @@ namespace DropoffApp
             JObject tipResponse = brawndo.order.tip.Delete(tipParameters);
             return tipResponse;
         }
-
-        static void Main(string[] args)
-        {
-            Program p = new Program();
-
-            p.Initialize();
-            JObject i1 = p.GetInfo();
-            System.Diagnostics.Debug.WriteLine("Info: " + i1.ToString());
-            JObject props = p.AvailableProperties();
-            System.Diagnostics.Debug.WriteLine("Properties: " + props.ToString());
-            JObject signature = p.GetOrderSignature("gV1z-NVVE-O8w");
-            System.Diagnostics.Debug.WriteLine("Signature: " + signature.ToString());
-
-            JObject e1 = p.GetEstimate(
-                "2517 Thornton Road, Austin, TX 78704", 
-                "800 Brazos Street, Austin, TX 78701",
-                DateTime.Now.ToString("zzz"),
-                0
-                );
-            System.Diagnostics.Debug.WriteLine("Estimate 1: " + e1.ToString());
-
-            DateTime tomorrow = DateTime.Now.AddDays(1);
-            DateTime tomorrowTenAM = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 10, 0, 0, 0);
-            if (tomorrowTenAM.Hour != 10)
-            {
-                tomorrowTenAM.AddHours(10 - tomorrowTenAM.Hour);
-            }
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            TimeSpan diff = tomorrowTenAM.ToUniversalTime() - origin;
-            JObject e2 =p.GetEstimate(
-                "2517 Thornton Road, Austin, TX 78704",
-                "800 Brazos Street, Austin, TX 78701",
-                tomorrowTenAM.ToString("zzz"),
-                (Int32) Math.Floor(diff.TotalSeconds)
-                );
-            System.Diagnostics.Debug.WriteLine("Estimate 2: " + e2.ToString());
-
-            JObject cr = p.CreateOrder((Int32)Math.Floor(diff.TotalSeconds), e2, new Int32[] { 9, 10 });
-            System.Diagnostics.Debug.WriteLine("Create Order Response: " + cr.ToString());
-
-            string created_order_id = (string)cr["data"]["order_id"];
-
-            JObject gor = p.GetIndividualOrder(created_order_id);
-            System.Diagnostics.Debug.WriteLine("Get Order Response: " + gor.ToString());
-
-            JObject tr = p.CreateTip(created_order_id, 4.44);
-            System.Diagnostics.Debug.WriteLine("Create Tip Response: " + tr.ToString());
-
-            tr = p.GetTip(created_order_id);
-            System.Diagnostics.Debug.WriteLine("Get Tip Response: " + tr.ToString());
-
-            tr = p.DeleteTip(created_order_id);
-            System.Diagnostics.Debug.WriteLine("Delete Tip Response: " + tr.ToString());
-
-            JObject cor = p.CancelOrder(created_order_id);
-            System.Diagnostics.Debug.WriteLine("Cancel Order Response: " + cor.ToString());
-        }
+//
+//        static void Main(string[] args)
+//        {
+//            Program p = new Program();
+//
+//            p.Initialize();
+//            JObject i1 = p.GetInfo();
+//            System.Diagnostics.Debug.WriteLine("Info: " + i1.ToString());
+//            JObject props = p.AvailableProperties();
+//            System.Diagnostics.Debug.WriteLine("Properties: " + props.ToString());
+//            JObject signature = p.GetOrderSignature("gV1z-NVVE-O8w");
+//            System.Diagnostics.Debug.WriteLine("Signature: " + signature.ToString());
+//
+//            JObject e1 = p.GetEstimate(
+//                "2517 Thornton Road, Austin, TX 78704", 
+//                "800 Brazos Street, Austin, TX 78701",
+//                DateTime.Now.ToString("zzz"),
+//                0
+//                );
+//            System.Diagnostics.Debug.WriteLine("Estimate 1: " + e1.ToString());
+//
+//            DateTime tomorrow = DateTime.Now.AddDays(1);
+//            DateTime tomorrowTenAM = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 10, 0, 0, 0);
+//            if (tomorrowTenAM.Hour != 10)
+//            {
+//                tomorrowTenAM.AddHours(10 - tomorrowTenAM.Hour);
+//            }
+//            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+//            TimeSpan diff = tomorrowTenAM.ToUniversalTime() - origin;
+//            JObject e2 =p.GetEstimate(
+//                "2517 Thornton Road, Austin, TX 78704",
+//                "800 Brazos Street, Austin, TX 78701",
+//                tomorrowTenAM.ToString("zzz"),
+//                (Int32) Math.Floor(diff.TotalSeconds)
+//                );
+//            System.Diagnostics.Debug.WriteLine("Estimate 2: " + e2.ToString());
+//
+//            JObject cr = p.CreateOrder((Int32)Math.Floor(diff.TotalSeconds), e2, new Int32[] { 9, 10 });
+//            System.Diagnostics.Debug.WriteLine("Create Order Response: " + cr.ToString());
+//
+//            string created_order_id = (string)cr["data"]["order_id"];
+//
+//            JObject gor = p.GetIndividualOrder(created_order_id);
+//            System.Diagnostics.Debug.WriteLine("Get Order Response: " + gor.ToString());
+//
+//            JObject tr = p.CreateTip(created_order_id, 4.44);
+//            System.Diagnostics.Debug.WriteLine("Create Tip Response: " + tr.ToString());
+//
+//            tr = p.GetTip(created_order_id);
+//            System.Diagnostics.Debug.WriteLine("Get Tip Response: " + tr.ToString());
+//
+//            tr = p.DeleteTip(created_order_id);
+//            System.Diagnostics.Debug.WriteLine("Delete Tip Response: " + tr.ToString());
+//
+//            JObject cor = p.CancelOrder(created_order_id);
+//            System.Diagnostics.Debug.WriteLine("Cancel Order Response: " + cor.ToString());
+//        }
     }
 }
