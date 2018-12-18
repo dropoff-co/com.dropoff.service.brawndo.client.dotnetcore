@@ -37,6 +37,13 @@ namespace DropoffApp
             return properties;
         }
 
+        protected JObject GetOrderItems()
+        {
+            OrderItemsParameters p = new OrderItemsParameters();
+            JObject items = brawndo.order.Items(p);
+            return items;
+        }
+
         protected JObject GetIndividualOrder(string order_id)
         {
             OrderGetParameters ogp = new OrderGetParameters();
@@ -168,6 +175,8 @@ namespace DropoffApp
 //            System.Diagnostics.Debug.WriteLine("Properties: " + props.ToString());
 //            JObject signature = p.GetOrderSignature("gV1z-NVVE-O8w");
 //            System.Diagnostics.Debug.WriteLine("Signature: " + signature.ToString());
+//            JObject items = p.GetOrderItems();
+//            System.Diagnostics.Debug.WriteLine("Items: " + items.ToString());
 //
 //            JObject e1 = p.GetEstimate(
 //                "2517 Thornton Road, Austin, TX 78704", 

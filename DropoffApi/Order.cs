@@ -79,6 +79,11 @@ namespace Dropoff
         public string company_id;
     }
 
+    public struct OrderItemsParameters
+    {
+        public string company_id;
+    }
+
     public class Order
     {
         private Client client;
@@ -225,6 +230,19 @@ namespace Dropoff
 
             JObject order = client.DoGet("/order/properties", "order", query);
             return order;
+        }
+
+        public JObject Items(OrderItemsParameters parameters)
+        {
+            Dictionary<string, string> query = new Dictionary<string, string>();
+
+            if (parameters.company_id != null)
+            {
+                query.Add("company_id", parameters.company_id);
+            }
+            
+            JObject items = client.DoGet("/order/items", "order", query);
+            return items;
         }
 
         public JObject Simulate(SimulateParameters parameters)
