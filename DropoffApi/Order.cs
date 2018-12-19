@@ -35,6 +35,22 @@ namespace Dropoff
         public string  reference_code;
     }
 
+    public struct OrderCreateItem
+    {
+        public string sku;
+        public Int32 quantity;
+        public double weight;
+        public double height;
+        public double width;
+        public double depth;
+        public string unit;
+        public string container;
+        public string description;
+        public string price;
+        public string temperature;
+        public string person_name;
+    }
+
     public struct OrderCreateParameters
     {
         public string company_id;
@@ -42,6 +58,7 @@ namespace Dropoff
         public OrderCreateAddress destination;
         public OrderCreateDetails details;
         public Int32[] properties;
+        public OrderCreateItem[] items;
     }
 
     public struct SimulateParameters

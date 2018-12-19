@@ -133,6 +133,36 @@ namespace DropoffApp
             ocp.details.eta = (string)estimate["data"]["ETA"];
             ocp.details.price = (string)estimate["data"]["two_hr"]["Price"];
             ocp.properties = properties;
+            OrderCreateItem item1 = new OrderCreateItem();
+            item1.sku = "128UV9";
+            item1.quantity = 3;
+            item1.weight = 10;
+            item1.height = 1.4;
+            item1.width = 1.2;
+            item1.depth = 2.3;
+            item1.unit = "ft";
+            item1.container = "BOX";
+            item1.description = "Box of t-shirts";
+            item1.price = "59.99";
+            item1.temperature = "NA";
+            item1.person_name = "T. Shirt";
+            
+            OrderCreateItem item2 = new OrderCreateItem();
+            
+            item2.sku = "128UV8";
+            item2.height = 9.4;
+            item2.width = 6.2;
+            item2.depth = 3.3;
+            item2.unit = "in";
+            item2.container = "BOX";
+            item2.description = "Box of socks";
+            item2.price = "9.99";
+            item2.temperature = "NA";
+            item2.person_name = "Jim";
+            
+            ocp.items = new OrderCreateItem[2];
+            ocp.items[0] = item1;
+            ocp.items[1] = item2;
             //orderCreateParams.details.reference_code = "";
             //orderCreateParams.details.reference_name = "";
             JObject cr = brawndo.order.Create(ocp);
