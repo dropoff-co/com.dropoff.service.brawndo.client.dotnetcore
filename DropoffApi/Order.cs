@@ -35,6 +35,22 @@ namespace Dropoff
         public string  reference_code;
     }
 
+    public struct OrderCreateItem
+    {
+        public string sku;
+        public Int32 quantity;
+        public double weight;
+        public double height;
+        public double width;
+        public double depth;
+        public string unit;
+        public string container;
+        public string description;
+        public string price;
+        public string temperature;
+        public string person_name;
+    }
+
     public struct OrderCreateParameters
     {
         public string company_id;
@@ -42,6 +58,7 @@ namespace Dropoff
         public OrderCreateAddress destination;
         public OrderCreateDetails details;
         public Int32[] properties;
+        public OrderCreateItem[] items;
     }
 
     public struct SimulateParameters
@@ -75,6 +92,11 @@ namespace Dropoff
     }
 
     public struct AvailablePropertiesParameters
+    {
+        public string company_id;
+    }
+
+    public struct OrderItemsParameters
     {
         public string company_id;
     }
@@ -225,6 +247,19 @@ namespace Dropoff
 
             JObject order = client.DoGet("/order/properties", "order", query);
             return order;
+        }
+
+        public JObject Items(OrderItemsParameters parameters)
+        {
+            Dictionary<string, string> query = new Dictionary<string, string>();
+
+            if (parameters.company_id != null)
+            {
+                query.Add("company_id", parameters.company_id);
+            }
+            
+            JObject items = client.DoGet("/order/items", "order", query);
+            return items;
         }
 
         public JObject Simulate(SimulateParameters parameters)
