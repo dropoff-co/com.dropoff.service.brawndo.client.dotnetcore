@@ -141,23 +141,20 @@ namespace DropoffApp
             item1.width = 1.2;
             item1.depth = 2.3;
             item1.unit = "ft";
-            item1.container = "BOX";
+            item1.container = brawndo.order.ContainerBox;
             item1.description = "Box of t-shirts";
             item1.price = "59.99";
-            item1.temperature = "NA";
+            item1.temperature = brawndo.order.TempNa;
             item1.person_name = "T. Shirt";
             
             OrderCreateItem item2 = new OrderCreateItem();
-            
             item2.sku = "128UV8";
             item2.height = 9.4;
             item2.width = 6.2;
             item2.depth = 3.3;
             item2.unit = "in";
-            item2.container = "BOX";
             item2.description = "Box of socks";
-            item2.price = "9.99";
-            item2.temperature = "NA";
+            item2.temperature = brawndo.order.TempNa;
             item2.person_name = "Jim";
             
             ocp.items = new OrderCreateItem[2];

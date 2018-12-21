@@ -262,7 +262,7 @@ An example of a successful response will look like this:
 - **requires** - an array of other property ids that must be included in an order when this property is set.  In the above response, when "Legal Filing" is set on an order, then "Signature Required" should be set as well.
 
 ### Order Items <a id="order_items"></a>
-Depending on your client, you may have the ability to add items to an order.  In order to determine if you can add items and which properties are disabled, optional, or required you can make a request to the **items** function.  It will return the order items configuration for the specified client.
+Depending on your client, you may have the ability to add items to an order.  In order to determine if you can add items and which properties are disabled, optional, or required you can make a request to the **Items** function.  It will return the order items configuration for the specified client.
 
 ```csharp
 OrderItemsParameters p = new OrderItemsParameters();
@@ -494,10 +494,10 @@ Some notes about items, here are all possible options that can be included but w
 - **depth** - Must be a number greater than 0
 - **width** - Must be a number greater than 0
 - **unit** - Must be in the array, ['in','ft','cm','mm','m']
-- **container** - Must be in the array, ['NA','BAG','BOX','TRAY','PALLET','BARREL','BASKET','BUCKET','CARTON','CASE','COOLER','CRATE']
+- **container** - Must be an integer. Can use one of the brawndo.order.Container* variables to reference possible containers
 - **description** - Must be a string
 - **price** - Must be a valid price format in dollars and cents, ex. 10, 10.5, 10.50, 10.0, 10.00
-- **temperature** - Must be in the array, ['NA','AMBIENT','REFRIGERATED','FROZEN']
+- **temperature** - Must be an integer. Can use the brawndo.order.Temp* variables to reference possilbe temps
 - **person_name** - Must be a string
 
 Passing fields that are disabled for the client will automatically fail creating the order and NOT passing required fields will automatically fail creating the order.
@@ -515,10 +515,10 @@ item1.height = 1.4;
 item1.width = 1.2;
 item1.depth = 2.3;
 item1.unit = "ft";
-item1.container = "BOX";
+item1.container = brawndo.order.ContainerBox;
 item1.description = "Box of t-shirts";
 item1.price = "59.99";
-item1.temperature = "NA";
+item1.temperature = brawndo.order.TempNa;
 item1.person_name = "T. Shirt";
 
 OrderCreateItem item2 = new OrderCreateItem();
@@ -528,10 +528,10 @@ item2.height = 9.4;
 item2.width = 6.2;
 item2.depth = 3.3;
 item2.unit = "in";
-item2.container = "BOX";
+item2.container = brawndo.order.ContainerBox;
 item2.description = "Box of socks";
 item2.price = "9.99";
-item2.temperature = "NA";
+item2.temperature = brawndo.order.TempNa;
 item2.person_name = "Jim";
 
 orderCreateParams.items = new OrderCreateItem[2];
