@@ -122,6 +122,7 @@ namespace Dropoff
         public Int32 ContainerCase = 900;
         public Int32 ContainerCooler = 1000;
         public Int32 ContainerCrate = 1100;
+        public Int32 ContainerTote = 1200;
 
         internal Order(Client client)
         {
