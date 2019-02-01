@@ -35,6 +35,22 @@ namespace Dropoff
         public string  reference_code;
     }
 
+    public class OrderCreateItem
+    {
+        public string sku = null;
+        public Int32? quantity;
+        public double? weight;
+        public double? height;
+        public double? width;
+        public double? depth;
+        public string unit = null;
+        public Int32? container;
+        public string description = null;
+        public string price = null;
+        public Int32? temperature;
+        public string person_name = null;
+    }
+
     public struct OrderCreateParameters
     {
         public string company_id;
@@ -42,6 +58,14 @@ namespace Dropoff
         public OrderCreateAddress destination;
         public OrderCreateDetails details;
         public Int32[] properties;
+        public OrderCreateItem[] items;
+    }
+
+    public struct SimulateParameters
+    {
+        public string company_id;
+        public string market;
+        public string order_id;
     }
 
     public struct EstimateParameters
@@ -72,10 +96,33 @@ namespace Dropoff
         public string company_id;
     }
 
+    public struct OrderItemsParameters
+    {
+        public string company_id;
+    }
+
     public class Order
     {
         private Client client;
         public Tip tip;
+        public Int32 TempNa = 0;
+        public Int32 TempAmbient = 100;
+        public Int32 TempRefrigerated = 200;
+        public Int32 TempFrozen = 300;
+
+        public Int32 ContainerNa = 0;
+        public Int32 ContainerBag = 100;
+        public Int32 ContainerBox = 200;
+        public Int32 ContainerTray = 300;
+        public Int32 ContainerPallet = 400;
+        public Int32 ContainerBarrel = 500;
+        public Int32 ContainerBasket = 600;
+        public Int32 ContainerBucket = 700;
+        public Int32 ContainerCarton = 800;
+        public Int32 ContainerCase = 900;
+        public Int32 ContainerCooler = 1000;
+        public Int32 ContainerCrate = 1100;
+        public Int32 ContainerTote = 1200;
 
         internal Order(Client client)
         {
@@ -220,15 +267,45 @@ namespace Dropoff
             return order;
         }
 
-        public JObject Simulate(string market)
+        public JObject Items(OrderItemsParameters parameters)
         {
-            if (market == null)
+            Dictionary<string, string> query = new Dictionary<string, string>();
+
+            if (parameters.company_id != null)
             {
-                throw new ArgumentException("market should not be null");
+                query.Add("company_id", parameters.company_id);
+            }
+            
+            JObject items = client.DoGet("/order/items", "order", query);
+            return items;
+        }
+
+        public JObject Simulate(SimulateParameters parameters)
+        {
+            if (parameters.market == null && parameters.order_id == null)
+            {
+                throw new ArgumentException("market or order_id should not be null");
             }
 
-            JObject order = client.DoGet("/order/simulate/" + market, "order", null);
-            return order;
+            string url = null;
+            
+            Dictionary<string, string> query = new Dictionary<string, string>();
+
+            if (parameters.company_id != null)
+            {
+                query.Add("company_id", parameters.company_id);
+            }
+
+            if (parameters.market != null)
+            {
+                url = "/order/simulate/" + parameters.market;
+            } else if (parameters.order_id != null)
+            {
+                url = "/order/simulate/order/" + parameters.order_id;
+            }
+            
+            JObject simulationResponse = client.DoGet(url, "order", query);
+            return simulationResponse;
         }
     }
 }
