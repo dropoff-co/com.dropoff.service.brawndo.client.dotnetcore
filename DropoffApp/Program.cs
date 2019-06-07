@@ -17,10 +17,12 @@ namespace DropoffApp
 
         protected void Initialize()
         {
-            string url = "https://sandbox-brawndo.dropoff.com/v1";
-            string host = "sandbox-brawndo.dropoff.com";
-            string private_key = "";
-            string public_key = "";
+            // string url = "https://sandbox-brawndo.dropoff.com/v1";
+            string url = "http://localhost:9094/v1";
+            // string host = "sandbox-brawndo.dropoff.com";
+            string host = "localhost:9094";
+            string private_key = "6c6c4a8e0e9c4b28e3f5e9e41185286ca2283fb5b3bcb44e3354b5d55330f495";
+            string public_key = "4ee8515f32be9537f3e66613323d9493ccbf61a7634c3863f05aa2298f6f3fe2";
             brawndo.Initialize(url, host, private_key, public_key);
         }
 
@@ -28,6 +30,14 @@ namespace DropoffApp
         {
             JObject info = brawndo.Info();
             return info;
+        }
+
+        protected JObject DriverActionsMeta()
+        {
+            DriverActionsMetaParameters p = new DriverActionsMetaParameters();
+            // p.company_id = "7df2b0bdb418157609c0d5766fb7fb12";
+            JObject dam = brawndo.order.DriverActionsMeta(p);
+            return dam;
         }
 
         protected JObject AvailableProperties()
@@ -57,6 +67,14 @@ namespace DropoffApp
             OrderGetParameters ogp = new OrderGetParameters();
             ogp.order_id = order_id;
             JObject order = brawndo.order.GetSignature(ogp);
+            return order;
+        }
+
+        protected JObject GetOrderPickupSignature(string order_id)
+        {
+            OrderGetParameters ogp = new OrderGetParameters();
+            ogp.order_id = order_id;
+            JObject order = brawndo.order.GetPickupSignature(ogp);
             return order;
         }
 
@@ -110,6 +128,7 @@ namespace DropoffApp
             ocp.origin.lat = 30.242626;
             ocp.origin.lng = -97.772999;
             ocp.origin.remarks = "Origin Remarks";
+            ocp.origin.driver_actions = "1400";
             ocp.destination = new OrderCreateAddress();
             ocp.destination.company_name = "Dropoff";
             ocp.destination.first_name = "Algis";
@@ -124,6 +143,7 @@ namespace DropoffApp
             ocp.destination.lat = 30.270265;
             ocp.destination.lng = -97.741044;
             ocp.destination.remarks = "Destination Remarks";
+            ocp.destination.driver_actions = "2400,2500";
             ocp.details = new OrderCreateDetails();
             ocp.details.ready_date = ready_date;
             ocp.details.type = "two_hr";
@@ -190,64 +210,73 @@ namespace DropoffApp
             JObject tipResponse = brawndo.order.tip.Delete(tipParameters);
             return tipResponse;
         }
-//
-//        static void Main(string[] args)
-//        {
-//            Program p = new Program();
-//
-//            p.Initialize();
-//            JObject i1 = p.GetInfo();
-//            System.Diagnostics.Debug.WriteLine("Info: " + i1.ToString());
-//            JObject props = p.AvailableProperties();
-//            System.Diagnostics.Debug.WriteLine("Properties: " + props.ToString());
-//            JObject signature = p.GetOrderSignature("gV1z-NVVE-O8w");
-//            System.Diagnostics.Debug.WriteLine("Signature: " + signature.ToString());
-//            JObject items = p.GetOrderItems();
-//            System.Diagnostics.Debug.WriteLine("Items: " + items.ToString());
-//
-//            JObject e1 = p.GetEstimate(
-//                "2517 Thornton Road, Austin, TX 78704", 
-//                "800 Brazos Street, Austin, TX 78701",
-//                DateTime.Now.ToString("zzz"),
-//                0
-//                );
-//            System.Diagnostics.Debug.WriteLine("Estimate 1: " + e1.ToString());
-//
-//            DateTime tomorrow = DateTime.Now.AddDays(1);
-//            DateTime tomorrowTenAM = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 10, 0, 0, 0);
-//            if (tomorrowTenAM.Hour != 10)
-//            {
-//                tomorrowTenAM.AddHours(10 - tomorrowTenAM.Hour);
-//            }
-//            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-//            TimeSpan diff = tomorrowTenAM.ToUniversalTime() - origin;
-//            JObject e2 =p.GetEstimate(
-//                "2517 Thornton Road, Austin, TX 78704",
-//                "800 Brazos Street, Austin, TX 78701",
-//                tomorrowTenAM.ToString("zzz"),
-//                (Int32) Math.Floor(diff.TotalSeconds)
-//                );
-//            System.Diagnostics.Debug.WriteLine("Estimate 2: " + e2.ToString());
-//
-//            JObject cr = p.CreateOrder((Int32)Math.Floor(diff.TotalSeconds), e2, new Int32[] { 9, 10 });
-//            System.Diagnostics.Debug.WriteLine("Create Order Response: " + cr.ToString());
-//
-//            string created_order_id = (string)cr["data"]["order_id"];
-//
-//            JObject gor = p.GetIndividualOrder(created_order_id);
-//            System.Diagnostics.Debug.WriteLine("Get Order Response: " + gor.ToString());
-//
-//            JObject tr = p.CreateTip(created_order_id, 4.44);
-//            System.Diagnostics.Debug.WriteLine("Create Tip Response: " + tr.ToString());
-//
-//            tr = p.GetTip(created_order_id);
-//            System.Diagnostics.Debug.WriteLine("Get Tip Response: " + tr.ToString());
-//
-//            tr = p.DeleteTip(created_order_id);
-//            System.Diagnostics.Debug.WriteLine("Delete Tip Response: " + tr.ToString());
-//
-//            JObject cor = p.CancelOrder(created_order_id);
-//            System.Diagnostics.Debug.WriteLine("Cancel Order Response: " + cor.ToString());
-//        }
+
+       static void Main(string[] args)
+       {
+           Program p = new Program();
+
+           p.Initialize();
+           JObject i1 = p.GetInfo();
+           Console.WriteLine("Info: " + i1.ToString());
+           JObject driverActionsMeta = p.DriverActionsMeta();
+           Console.WriteLine("Driver Actions Meta: " + driverActionsMeta.ToString());
+        //    JObject props = p.AvailableProperties();
+        //    System.Diagnostics.Debug.WriteLine("Properties: " + props.ToString());
+        //    JObject signature = p.GetOrderSignature("gV1z-NVVE-O8w");
+        //    System.Diagnostics.Debug.WriteLine("Signature: " + signature.ToString());
+        //    JObject items = p.GetOrderItems();
+        //    System.Diagnostics.Debug.WriteLine("Items: " + items.ToString());
+
+        //    JObject e1 = p.GetEstimate(
+        //        "2517 Thornton Road, Austin, TX 78704", 
+        //        "800 Brazos Street, Austin, TX 78701",
+        //        DateTime.Now.ToString("zzz"),
+        //        0
+        //        );
+        //    System.Diagnostics.Debug.WriteLine("Estimate 1: " + e1.ToString());
+
+        //    DateTime tomorrow = DateTime.Now.AddDays(1);
+        //    DateTime tomorrowTenAM = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 10, 0, 0, 0);
+        //    if (tomorrowTenAM.Hour != 10)
+        //    {
+        //        tomorrowTenAM.AddHours(10 - tomorrowTenAM.Hour);
+        //    }
+        //    DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        //    TimeSpan diff = tomorrowTenAM.ToUniversalTime() - origin;
+        //    JObject e2 =p.GetEstimate(
+        //        "2517 Thornton Road, Austin, TX 78704",
+        //        "800 Brazos Street, Austin, TX 78701",
+        //        tomorrowTenAM.ToString("zzz"),
+        //        (Int32) Math.Floor(diff.TotalSeconds)
+        //        );
+        //    System.Diagnostics.Debug.WriteLine("Estimate 2: " + e2.ToString());
+
+        //    JObject cr = p.CreateOrder((Int32)Math.Floor(diff.TotalSeconds), e2, new Int32[] { 9, 10 });
+        //    System.Diagnostics.Debug.WriteLine("Create Order Response: " + cr.ToString());
+
+        //    string created_order_id = (string)cr["data"]["order_id"];
+
+        //    JObject gor = p.GetIndividualOrder(created_order_id);
+           JObject gor = p.GetIndividualOrder("mvB0-1jeQ-N20");
+           Console.WriteLine("Get Order Response: " + gor.ToString());
+
+        //    JObject tr = p.CreateTip(created_order_id, 4.44);
+        //    System.Diagnostics.Debug.WriteLine("Create Tip Response: " + tr.ToString());
+
+        //    tr = p.GetTip(created_order_id);
+        //    System.Diagnostics.Debug.WriteLine("Get Tip Response: " + tr.ToString());
+
+        //    tr = p.DeleteTip(created_order_id);
+        //    System.Diagnostics.Debug.WriteLine("Delete Tip Response: " + tr.ToString());
+
+        //    JObject cor = p.CancelOrder(created_order_id);
+        //    System.Diagnostics.Debug.WriteLine("Cancel Order Response: " + cor.ToString());
+
+        // JObject sig = p.GetOrderSignature("mvB0-1jeQ-N20");
+        // Console.WriteLine("Signature Response: " + sig.ToString());
+
+        // JObject psig = p.GetOrderPickupSignature("mvB0-1jeQ-N20");
+        // Console.WriteLine("Pickup Signature Response: " + psig.ToString());
+       }
     }
 }
