@@ -17,12 +17,10 @@ namespace DropoffApp
 
         protected void Initialize()
         {
-            // string url = "https://sandbox-brawndo.dropoff.com/v1";
-            string url = "http://localhost:9094/v1";
-            // string host = "sandbox-brawndo.dropoff.com";
-            string host = "localhost:9094";
-            string private_key = "6c6c4a8e0e9c4b28e3f5e9e41185286ca2283fb5b3bcb44e3354b5d55330f495";
-            string public_key = "4ee8515f32be9537f3e66613323d9493ccbf61a7634c3863f05aa2298f6f3fe2";
+            string url = "https://sandbox-brawndo.dropoff.com/v1";
+            string host = "sandbox-brawndo.dropoff.com";
+            string private_key = "";
+            string public_key = "";
             brawndo.Initialize(url, host, private_key, public_key);
         }
 
@@ -35,7 +33,7 @@ namespace DropoffApp
         protected JObject DriverActionsMeta()
         {
             DriverActionsMetaParameters p = new DriverActionsMetaParameters();
-            // p.company_id = "7df2b0bdb418157609c0d5766fb7fb12";
+            // p.company_id = "";
             JObject dam = brawndo.order.DriverActionsMeta(p);
             return dam;
         }
@@ -128,7 +126,7 @@ namespace DropoffApp
             ocp.origin.lat = 30.242626;
             ocp.origin.lng = -97.772999;
             ocp.origin.remarks = "Origin Remarks";
-            ocp.origin.driver_actions = "1400";
+            // ocp.origin.driver_actions = "1400";
             ocp.destination = new OrderCreateAddress();
             ocp.destination.company_name = "Dropoff";
             ocp.destination.first_name = "Algis";
@@ -143,7 +141,7 @@ namespace DropoffApp
             ocp.destination.lat = 30.270265;
             ocp.destination.lng = -97.741044;
             ocp.destination.remarks = "Destination Remarks";
-            ocp.destination.driver_actions = "2400,2500";
+            // ocp.destination.driver_actions = "2400,2500";
             ocp.details = new OrderCreateDetails();
             ocp.details.ready_date = ready_date;
             ocp.details.type = "two_hr";
@@ -257,8 +255,8 @@ namespace DropoffApp
         //    string created_order_id = (string)cr["data"]["order_id"];
 
         //    JObject gor = p.GetIndividualOrder(created_order_id);
-           JObject gor = p.GetIndividualOrder("mvB0-1jeQ-N20");
-           Console.WriteLine("Get Order Response: " + gor.ToString());
+        //    JObject gor = p.GetIndividualOrder(created_order_id);
+        //    Console.WriteLine("Get Order Response: " + gor.ToString());
 
         //    JObject tr = p.CreateTip(created_order_id, 4.44);
         //    System.Diagnostics.Debug.WriteLine("Create Tip Response: " + tr.ToString());
@@ -272,10 +270,10 @@ namespace DropoffApp
         //    JObject cor = p.CancelOrder(created_order_id);
         //    System.Diagnostics.Debug.WriteLine("Cancel Order Response: " + cor.ToString());
 
-        // JObject sig = p.GetOrderSignature("mvB0-1jeQ-N20");
+        // JObject sig = p.GetOrderSignature(created_order_id);
         // Console.WriteLine("Signature Response: " + sig.ToString());
 
-        // JObject psig = p.GetOrderPickupSignature("mvB0-1jeQ-N20");
+        // JObject psig = p.GetOrderPickupSignature(created_order_id);
         // Console.WriteLine("Pickup Signature Response: " + psig.ToString());
        }
     }
