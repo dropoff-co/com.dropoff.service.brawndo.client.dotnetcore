@@ -21,6 +21,8 @@ namespace Dropoff
         public double lng;
         public string remarks;
         public string driver_actions;
+        public bool? email_notifications;
+        public bool? sms_notifications;
     }
 
     public struct OrderCreateDetails
