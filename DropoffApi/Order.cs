@@ -36,6 +36,8 @@ namespace Dropoff
         public string  type;
         public string  reference_name;
         public string  reference_code;
+        public string  third_party_delivery_id;
+        public string  air_waybill_number;
     }
 
     public class OrderCreateItem
