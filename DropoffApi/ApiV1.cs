@@ -7,6 +7,7 @@ namespace Dropoff
     {
         private Client client;
         public Order order;
+        public Bulk bulk;
 
         public ApiV1()
         {
@@ -17,6 +18,7 @@ namespace Dropoff
         {
             client = new Client(apiUrl, host, privateKey, publicKey);
             order = new Order(client);
+            bulk = new Bulk(client);
         }
 
         public JObject Info()

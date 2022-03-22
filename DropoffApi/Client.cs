@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -78,7 +79,18 @@ namespace Dropoff
             ProductInfoHeaderValue productInfo = new ProductInfoHeaderValue(new ProductHeaderValue("DropoffBrawndo","1.0"));
             message.Headers.UserAgent.Add(productInfo);
 
-            if (payload != null)
+            if (payload != null && resource == "bulkupload") 
+            {
+                FileStream fs = new FileStream(payload, FileMode.Open, FileAccess.Read);
+                byte[] fileContent = new byte[fs.Length];
+                fs.Read(fileContent, 0, fileContent.Length);
+                fs.Close();
+                var fileStream = new MultipartFormDataContent();
+                fileStream.Add(new ByteArrayContent(fileContent, 0, fileContent.Length), "file", payload);
+                message.Content = fileStream;
+
+            }
+            else if (payload != null)
             {
                 message.Content = new StringContent(payload, System.Text.Encoding.UTF8, "application/json");
             }
@@ -163,6 +175,12 @@ namespace Dropoff
         }
 
         public JObject DoDelete(string path, string resource, IDictionary<string, string> query)
+        {
+            Task<JObject> task = Task.Run(async () => await this.DoRequest(HttpMethod.Delete, path, resource, query, null));
+            task.Wait();
+            return task.Result;
+        }
+        public JObject DoPut(string path, string resource, string payload, IDictionary<string, string> query)
         {
             Task<JObject> task = Task.Run(async () => await this.DoRequest(HttpMethod.Delete, path, resource, query, null));
             task.Wait();
