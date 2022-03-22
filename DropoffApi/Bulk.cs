@@ -38,5 +38,13 @@ namespace Dropoff
       JObject result = client.DoPost("/bulkupload", "bulkupload", filename, query);
       return result;
     }
+
+    public JObject Cancel(BulkCancelParams parameters)
+    {
+      string bulk_id = parameters.bulk_id;
+
+      JObject result = client.DoPut("/bulkupload/"+bulk_id, "bulkupload", null, null);
+      return result;
+    }
   }
 }

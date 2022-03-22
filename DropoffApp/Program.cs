@@ -17,10 +17,10 @@ namespace DropoffApp
 
         protected void Initialize()
         {
-            string url = "http://localhost:9094/v1";
-            string host = "localhost:9094";
-            string private_key = "6cc3fcf4b4db7b7550fc53414d4d1c15afe5ab0e65c7c6d1afcfce39c501861c";
-            string public_key = "bce5d3e8dff43743d6a1a241694e247a33dc35cf23fb3e36d727a0fa62179b4b";
+            string url = "https://sandbox-brawndo.dropoff.com/v1";
+            string host = "sandbox-brawndo.dropoff.com";
+            string private_key = "";
+            string public_key = "";
             brawndo.Initialize(url, host, private_key, public_key);
         }
 
@@ -217,6 +217,14 @@ namespace DropoffApp
            return bulkResponse;
         }
 
+        protected JObject CancelBulk(string bulk_id)
+        {
+            BulkCancelParams bulkparams = new BulkCancelParams();
+            bulkparams.bulk_id = bulk_id;
+            JObject bulkResponse = brawndo.bulk.Cancel(bulkparams);
+            return bulkResponse;
+        }
+
        static void Main(string[] args)
        {
            Program p = new Program();
@@ -227,6 +235,8 @@ namespace DropoffApp
 
            JObject b = p.CreateBulk("./shortest copy.csv");
            Console.WriteLine("Bulk: " + b.ToString());
+           JObject bc = p.CancelBulk("cbd9f7b1f0f8915f65429f66dbb59378");
+            Console.WriteLine("Cancel: " +bc.ToString());
         //    JObject driverActionsMeta = p.DriverActionsMeta();
         //    Console.WriteLine("Driver Actions Meta: " + driverActionsMeta.ToString());
         //    JObject props = p.AvailableProperties();

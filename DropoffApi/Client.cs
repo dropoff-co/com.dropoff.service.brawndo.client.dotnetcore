@@ -182,7 +182,7 @@ namespace Dropoff
         }
         public JObject DoPut(string path, string resource, string payload, IDictionary<string, string> query)
         {
-            Task<JObject> task = Task.Run(async () => await this.DoRequest(HttpMethod.Delete, path, resource, query, null));
+            Task<JObject> task = Task.Run(async () => await this.DoRequest(HttpMethod.Put, path, resource, query, null));
             task.Wait();
             return task.Result;
         }
